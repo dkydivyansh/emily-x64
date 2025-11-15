@@ -1,0 +1,2546 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <link rel="icon" type="image/png" href="./assets/logo.png">
+    <link rel="stylesheet" href="./assets/fa-pro/css/all.min.css">
+    <link rel="stylesheet" href="./assets/tailwindcss.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .setup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0d098f 0%, #8000ff 50%, #05ffd1 100%);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .setup-overlay.active {
+            display: flex;
+        }
+
+        .setup-container {
+            background: rgb(0 0 0 / 81%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgb(192 234 255);
+            border-radius: 20px;
+            padding: 40px;
+            width: 85%;
+            max-width: 650px;
+            height: auto;
+            min-height: 450px;
+            max-height: 85vh;
+            text-align: center;
+            box-shadow: 0 25px 50px rgb(244 244 244 / 72%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .setup-step {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        .setup-step.active {
+            display: block;
+            position: relative;
+            padding: 0;
+            animation: slideInRight 0.2s ease-out;
+        }
+
+        .setup-step.active.slide-in-left {
+            animation: slideInLeft 0.2s ease-out;
+        }
+
+        .setup-step.slide-out-left {
+            animation: slideOutLeft 0.2s ease-out;
+        }
+
+        .setup-step.slide-out-right {
+            animation: slideOutRight 0.2s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideOutLeft {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(-50px); }
+        }
+
+        @keyframes slideOutRight {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(50px); }
+        }
+
+        /* Disable buttons during transitions */
+        .setup-container.transitioning .btn {
+            pointer-events: none;
+            opacity: 0.6;
+            transform: scale(0.98);
+            transition: all 0.2s ease;
+        }
+
+        .btn {
+            transition: all 0.2s ease;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        h2 {
+            color: #fff;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .agreement-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            max-height: 280px;
+            overflow-y: auto;
+            text-align: left;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .agreement-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .agreement-box::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .agreement-box::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 24px 0;
+            gap: 8px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #667eea;
+        }
+
+        .checkbox-container label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+
+        .settings-grid {
+            display: grid;
+            gap: 24px;
+            margin: 24px 0;
+            text-align: left;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+
+        .form-group select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle.active {
+            background: #667eea;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle.active .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        .toggle-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 8px;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            min-width: 160px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 10001;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .loading-screen.active {
+            display: flex;
+        }
+
+        .loader {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #fff;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .progress-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+    </style>
+    <style>
+
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary-color: #d946ef;
+            --accent-color: #ffc187;
+            --dark-bg: #0d0221;
+            --card-bg: rgba(16, 16, 28, 0.5);
+            --text-light: #ffffff;
+            --text-medium: rgba(255, 255, 255, 0.8);
+            --text-dim: rgba(255, 255, 255, 0.6);
+            --border-light: rgba(255, 255, 255, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(-45deg, #0d0221, #140d30, #1d0c53, #2a1163);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Animations */
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.6; filter: blur(30px); }
+            50% { opacity: 0.9; filter: blur(35px); }
+            100% { opacity: 0.6; filter: blur(30px); }
+        }
+
+        /* Header styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: rgba(13, 2, 33, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 40;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 0.8rem;
+            gap: 12px;
+        }
+
+        .app-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .app-logo {
+            width: 180px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+
+        .app-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .sidebar-toggle {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 8px;
+            border: 1px solid var(--border-light);
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--border-light);
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .profile-avatar:hover {
+            border-color: var(--primary-color);
+        }
+
+        .profile-name {
+            font-weight: 500;
+            color: var(--text-medium);
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            bottom: 0;
+            width: 280px;
+            background: rgba(13, 2, 33, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--border-light);
+            transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
+            display: flex;
+            flex-direction: column;
+            z-index: 30;
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed {
+            width: 60px;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .sidebar-button {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            color: var(--text-medium);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .sidebar-button:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-light);
+        }
+
+        .sidebar-button i {
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .sidebar-button span {
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-button span {
+            opacity: 0;
+            width: 0;
+        }
+
+        .sidebar.collapsed .sidebar-button {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            min-height: 48px;
+            max-width: 48px;
+            max-height: 48px;
+            padding: 0;
+            margin: 0 auto 0.5rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+        }
+        .sidebar.collapsed .sidebar-button i {
+            margin: 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+        .sidebar.collapsed .sidebar-button span {
+            display: none !important;
+        }
+        .sidebar.collapsed .sidebar-content {
+            padding-left: 0.25rem;
+            padding-right: 0.25rem;
+        }
+        .sidebar.collapsed .sidebar-section {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .sidebar-section {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .sidebar-section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            letter-spacing: 0.05em;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-section-title {
+            opacity: 0;
+            height: 0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        /* Chat area styles */
+        .main-content {
+            margin-left: 280px;
+            margin-top: 64px;
+            height: calc(100vh - 64px);
+            transition: margin-left 0.3s cubic-bezier(0.4,0,0.2,1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content.expanded {
+            margin-left: 60px;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .empty-chat {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+            width: 90%;
+            max-width: 900px;
+            display: none; /* Hide welcome screen by default */
+        }
+
+        .empty-chat h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #ffffff, #d8b4fe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .suggestion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .suggestion-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .suggestion-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+        }
+
+        .suggestion-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        /* Input area styles */
+        .input-container {
+            background: rgba(13, 2, 33, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-light);
+            padding: 1rem;
+            position: relative;
+        }
+
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin: 0 auto;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .file-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            width: 100%;
+            min-height: 0;
+            transition: min-height 0.3s ease;
+        }
+
+        .attachment-dropdown {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 0.5rem;
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+            z-index: 10;
+        }
+
+        .attachment-dropdown.show {
+            display: block;
+        }
+
+        .attachment-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 1rem;
+            color: var(--text-medium);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .attachment-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+        }
+
+        .file-preview {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            animation: fadeIn 0.3s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
+        }
+
+        .file-preview:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .file-preview i {
+            margin-right: 0.75rem;
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+
+        .file-preview span {
+            font-size: 0.875rem;
+            margin-right: 0.75rem;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--text-light);
+        }
+
+        .file-preview button {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 1.25rem;
+            padding: 0;
+            transition: color 0.2s ease;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .file-preview button:hover {
+            color: #ef4444;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Message bubbles */
+        .message-bubble {
+            max-width: 75%;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            border-radius: 1rem;
+            animation: fadeIn 0.3s ease-out;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            transition: transform 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message-bubble:hover {
+            transform: translateY(-2px);
+        }
+
+        .message-bubble::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 40%,
+                rgba(255, 255, 255, 0) 80%);
+            border-radius: inherit;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .message-bubble-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+            margin-top: auto;
+            padding-top: 0.75rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .message-text {
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .message-sender {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            margin-left: auto;
+            border-bottom-right-radius: 0.25rem;
+            border-top-left-radius: 1.5rem;
+        }
+
+        .ai-message {
+            background: var(--card-bg);
+            margin-right: auto;
+            border-bottom-left-radius: 0.25rem;
+            border-top-right-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .message-text {
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        /* Markdown styles */
+        .message-text h1,
+        .message-text h2,
+        .message-text h3,
+        .message-text h4,
+        .message-text h5,
+        .message-text h6 {
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+
+        .message-text h1 { font-size: 1.5em; }
+        .message-text h2 { font-size: 1.3em; }
+        .message-text h3 { font-size: 1.2em; }
+        .message-text h4 { font-size: 1.1em; }
+        .message-text h5 { font-size: 1em; }
+        .message-text h6 { font-size: 0.9em; }
+
+        .message-text p {
+            margin-bottom: 1em;
+        }
+
+        .message-text ul,
+        .message-text ol {
+            margin: 0.5em 0;
+            padding-left: 2em;
+        }
+
+        .message-text li {
+            margin: 0.25em 0;
+        }
+
+        .message-text a {
+            color: var(--primary-color);
+            text-decoration: none;
+            border-bottom: 1px solid var(--primary-color);
+            transition: all 0.2s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .message-text a:hover {
+            color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .message-text a:hover::after {
+            content: "Press Ctrl + Click to open in browser";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            white-space: nowrap;
+            pointer-events: none;
+            margin-bottom: 4px;
+            z-index: 1000;
+        }
+
+        .message-text a:hover::before {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.8);
+            margin-bottom: -4px;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .message-text code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .message-text pre {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1em;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1em 0;
+        }
+
+        .message-text pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        .message-text blockquote {
+            border-left: 4px solid var(--primary-color);
+            margin: 1em 0;
+            padding: 0.5em 1em;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .message-text strong {
+            font-weight: 600;
+        }
+
+        .message-text em {
+            font-style: italic;
+        }
+
+        .message-text hr {
+            border: none;
+            border-top: 1px solid var(--border-light);
+            margin: 1em 0;
+        }
+
+        .message-text table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+        }
+
+        .message-text th,
+        .message-text td {
+            border: 1px solid var(--border-light);
+            padding: 0.5em;
+            text-align: left;
+        }
+
+        .message-text th {
+            background: rgba(255, 255, 255, 0.05);
+            font-weight: 600;
+        }
+
+        /* Thinking animation */
+        .thinking-animation {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            margin: 8px 0;
+            width: fit-content;
+        }
+
+        .thinking-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            animation: thinking 1.4s infinite ease-in-out;
+        }
+
+        .thinking-dot:nth-child(1) { animation-delay: -0.32s; }
+        .thinking-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes thinking {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .message-file-preview {
+            margin-top: 0.75rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .user-message .message-file-preview {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .ai-message .message-file-preview {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .message-file-preview .file-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .message-file-preview .file-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* New styles for message file container and image thumbnails */
+        .message-files-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* 2 columns, minimum 120px each */
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            z-index: 2;
+        }
+
+        .message-file-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+
+        .message-file-item:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .message-file-item.image-item {
+            padding: 0;
+        }
+
+        .message-file-item .file-icon {
+            width: 48px;
+            height: 48px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .message-file-item .message-image-thumbnail {
+            width: 100%;
+            height: 100px; /* Fixed height for thumbnails */
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 0.5rem;
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .message-file-item .file-name {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            word-break: break-all;
+            white-space: normal;
+            padding: 0 0.5rem 0.5rem;
+        }
+
+        /* Adjust message bubble padding when files are present */
+        .message-bubble:has(.message-files-container) {
+            padding-bottom: 0.75rem; /* Reduce bottom padding */
+        }
+
+        .user-message .message-file-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .ai-message .message-file-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* File upload status styles */
+        .file-upload-status {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .file-upload-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .file-upload-info i {
+            font-size: 1.25rem;
+            width: 1.5rem;
+            text-align: center;
+        }
+
+        .file-upload-info i.fa-spinner {
+            color: var(--primary-color);
+            animation: fa-spin 1s infinite linear;
+        }
+
+        .file-upload-info i.fa-check-circle {
+            color: #10b981;
+        }
+
+        .file-upload-info i.fa-exclamation-circle {
+            color: #ef4444;
+        }
+
+        .file-upload-info .file-name {
+            flex: 1;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .file-upload-info .status-text {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .file-upload-status .error-message {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: #ef4444;
+            padding-left: 2.25rem;
+        }
+
+        /* Scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        #message-input {
+            color: black;
+        }
+
+        .file-upload-status.uploading .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color) 40%, var(--secondary-color) 100%);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .file-upload-status.uploading .progress-bar-inner {
+            width: 40%;
+            height: 100%;
+            background: var(--accent-color);
+            border-radius: 2px;
+            animation: progressBarMove 1.2s linear infinite;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        @keyframes progressBarMove {
+            0% { left: -40%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes fa-spin {
+            0% { transform: rotate(0deg);}
+            100% { transform: rotate(359deg);}
+        }
+
+        #subscription-button i {
+            color: var(--text-medium);
+            background: none;
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: unset;
+            background-clip: unset;
+        }
+        #subscription-button span {
+            color: var(--text-medium);
+            background: none;
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: unset;
+            background-clip: unset;
+        }
+
+        /* Only for pro users, make icon and text golden gradient */
+        #subscription-button.pro-glow i,
+        #subscription-button.pro-glow span {
+            background: linear-gradient(90deg, #ffd700 0%, #ffed4e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+        /* Pro subscription button hover effect: golden glow */
+        #subscription-button.pro-glow:hover {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.10) 0%, rgba(255, 237, 78, 0.10) 100%);
+            box-shadow: 0 0 8px 2px rgba(255, 215, 0, 0.25), 0 2px 8px rgba(255, 237, 78, 0.15);
+            border-radius: 8px;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+
+        .user-type-box {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            text-decoration: none;
+            margin-right: 8px;
+        }
+
+        .user-type-box:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-light);
+        }
+
+        .user-type-box i {
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+            color: var(--text-medium);
+            transition: color 0.3s ease;
+        }
+
+        .user-type-box:hover i {
+            color: var(--text-light);
+        }
+
+        .user-type-box.pro-glow i {
+            color: #ffd700 !important;
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+            position: relative;
+            z-index: 2;
+        }
+
+        .user-type-box.pro-glow:hover i {
+            filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.8));
+        }
+
+        .user-type-box.pro-glow {
+            background: linear-gradient(135deg, 
+                rgba(255, 215, 0, 0.15) 0%,
+                rgba(255, 193, 7, 0.12) 25%,
+                rgba(255, 165, 0, 0.1) 50%,
+                rgba(255, 140, 0, 0.12) 75%,
+                rgba(255, 215, 0, 0.15) 100%);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            box-shadow: 
+                0 0 4px rgba(255, 215, 0, 0.4),
+                0 0 8px rgba(255, 193, 7, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            animation: proGlowPulse 2s ease-in-out infinite alternate;
+            color: #fff;
+        }
+
+        .user-type-box.pro-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%,
+                rgba(255, 255, 255, 0.2) 50%,
+                transparent 100%);
+            animation: shimmer 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .user-type-box span {
+            position: relative;
+            z-index: 2;
+        }
+
+        .user-type-box.pro-glow:hover {
+            background: linear-gradient(135deg, 
+                rgba(255, 215, 0, 0.25) 0%,
+                rgba(255, 193, 7, 0.22) 25%,
+                rgba(255, 165, 0, 0.2) 50%,
+                rgba(255, 140, 0, 0.22) 75%,
+                rgba(255, 215, 0, 0.25) 100%);
+            transform: translateY(-1px);
+            box-shadow: 
+                0 0 6px rgba(255, 215, 0, 0.6),
+                0 0 12px rgba(255, 193, 7, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .popup-under-header {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            width: 100vw;
+            min-height: 100%;
+            background: rgba(20, 16, 40, 0.70);
+            backdrop-filter: blur(16px);
+            z-index: 100;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        .popup-under-header.pro-glow {
+            box-shadow: 0 0 48px 8px rgba(255,215,0,0.18);
+            border-bottom: 2px solid #ffd70055;
+        }
+        .popup-close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            margin-left: 12px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .popup-close-btn:hover { opacity: 1; }
+
+        /* Add this to your existing styles */
+        .toast-container {
+            position: fixed;
+            top: 80px; /* Below header */
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            min-width: 300px;
+            padding: 16px;
+            border-radius: 12px;
+            background: rgba(13, 2, 33, 0.75);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(120%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .toast::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 100%
+            );
+            z-index: 0;
+        }
+
+        .toast > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.hide {
+            transform: translateX(120%);
+        }
+
+        .toast-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .toast-message {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .toast-close {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            padding: 4px;
+            font-size: 1.25rem;
+            transition: all 0.2s;
+            border-radius: 6px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-close:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Toast types */
+        .toast.success {
+            background: rgba(16, 185, 129, 0.15);
+            border-left: 4px solid rgba(16, 185, 129, 0.8);
+        }
+
+        .toast.success .toast-icon {
+            color: #10b981;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
+
+        .toast.error {
+            background: rgba(239, 68, 68, 0.15);
+            border-left: 4px solid rgba(239, 68, 68, 0.8);
+        }
+
+        .toast.error .toast-icon {
+            color: #ef4444;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+        }
+
+        .toast.info {
+            background: rgba(59, 130, 246, 0.15);
+            border-left: 4px solid rgba(59, 130, 246, 0.8);
+        }
+
+        .toast.info .toast-icon {
+            color: #3b82f6;
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+        }
+
+        .toast.warning {
+            background: rgba(245, 158, 11, 0.15);
+            border-left: 4px solid rgba(245, 158, 11, 0.8);
+        }
+
+        .toast.warning .toast-icon {
+            color: #f59e0b;
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.08);
+            border: none;
+            color: #fff;
+            border-radius: 8px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            outline: none;
+            box-shadow: none;
+        }
+        .icon-btn:hover {
+            background: rgba(99,102,241,0.18);
+            color: #6366f1;
+        }
+        .history-item {
+            max-height: 320px;
+            overflow-y: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .history-item .message-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 8;
+            line-clamp: 8;
+            -webkit-box-orient: vertical;
+            white-space: pre-line;
+            position: relative;
+        }
+        .history-item .message-text::after {
+            content: '................................... more >';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: inherit;
+            padding: 0 4px;
+            display: none;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .history-item .message-text:has(> *:nth-child(9))::after {
+            display: block;
+        }
+
+        /* Styles for code block copy button */
+        .code-block-wrapper {
+            position: relative;
+            margin: 1em 0;
+        }
+
+        .code-block-wrapper .code-copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.4rem 0.6rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease, background 0.2s ease;
+            z-index: 5;
+            width: auto;
+            height: auto;
+        }
+
+        .code-block-wrapper:hover .code-copy-btn {
+            opacity: 1;
+        }
+
+        .code-block-wrapper .code-copy-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .code-block-wrapper pre {
+            margin: 0; /* Remove default margin to let wrapper control it */
+            padding-top: 2.5rem; /* Make space for the button */
+            position: relative; /* Ensure pre is positioned for button */
+        }
+
+        /* Limit the height of the language select dropdown */
+        #languageSelect {
+            max-height: 48px; /* Height of the closed select */
+            overflow-y: auto;
+        }
+
+        /* For the dropdown list itself (works in most modern browsers) */
+        #languageSelect option {
+            background: #111 !important;
+            color: #fff !important;
+        }
+
+        /* For Chrome, Edge, Opera: limit dropdown height */
+        #languageSelect:focus {
+            outline: 2px solid #a78bfa;
+        }
+
+        /* For Webkit browsers: limit dropdown popup height */
+        #languageSelect {
+            /* This is a trick for Chrome/Edge/Opera to limit dropdown height */
+            /* It doesn't work in Firefox, but Firefox already limits the popup height */
+            /* The important part is to keep the select itself a reasonable size */
+        }
+
+        /* Audio Player Popup Styles */
+        .audio-player-popup {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: rgba(13, 2, 33, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .audio-player-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .audio-visualizer {
+            width: 200px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .audio-control-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .audio-control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Message Audio Controls */
+        .message-audio-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .message-audio-btn {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .message-audio-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .message-audio-btn i {
+            font-size: 0.875rem;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Add this right after body tag -->
+    <div class="toast-container" id="toast-container"></div>
+    
+    <!-- Simple window close function that matches the example -->
+    <script>
+        window.closeWindow = function() {
+            console.log('Close window function called');
+            if (window.pywebview && window.pywebview.api && 
+                typeof window.pywebview.api.close_window === 'function') {
+                console.log('Using pywebview.api.close_window');
+                return window.pywebview.api.close_window();
+            }
+            
+            // Fallback to window.close
+            console.log('Using window.close fallback');
+            try {
+                window.close();
+                return true;
+            } catch (e) {
+                console.error('Error in window.close:', e);
+                return false;
+            }
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, checking for PyWebView API...');
+            if (window.pywebview && window.pywebview.api) {
+                console.log('PyWebView detected on DOM load', 
+                    'close_window available:', typeof window.pywebview.api.close_window === 'function');
+            } else {
+                console.log('PyWebView not detected on DOM load, window close may use fallbacks');
+            }
+        });
+    </script>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="app-brand">
+            <button class="sidebar-toggle" id="sidebar-toggle">
+                <i class="fad fa-bars"></i>
+            </button>
+            <div class="app-logo" id="app-logo" style="width: 180px; height: 32px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 4px;">
+                <img src="./assets/logo.png" alt="App Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+            </div>
+            <span class="app-name" id="app-name">Loading...</span>
+        </div>
+        <div id="popup-title-section" style="display:none;"></div>
+        <!-- User type box -->
+        <div class="profile-section">
+            <div id="user-type-box" class="user-type-box">
+                <i class="fad fa-diamond" style="font-size: 1rem;"></i>
+                <span>Free</span>
+            </div>
+            <span class="profile-name" id="profile-name">Loading...</span>
+            <img id="profile-avatar" src="" alt="Profile" class="profile-avatar">
+        </div>
+    </header>
+
+    <!-- Audio Player Popup -->
+    <div id="audio-player-popup" class="audio-player-popup" style="display: none;">
+        <div class="audio-player-content">
+            <div class="audio-visualizer">
+                <canvas id="audio-visualizer-canvas"></canvas>
+            </div>
+            <div class="audio-controls">
+                <button id="audio-stop-btn" class="audio-control-btn">
+                    <i class="fas fa-stop"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Main</div>
+                <a id="history-button" class="sidebar-button" onclick="handleHistoryClick()">
+                    <i class="fad fa-scroll-old"></i><span>History</span>
+                </a>
+                <a id="memory-button" class="sidebar-button" onclick="handleMemoryClick()">
+                    <i class="fad fa-database"></i><span>AI Memory</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Account</div>
+                <a id="account-button" class="sidebar-button" onclick="handleAccountClick()">
+                    <i class="fad fa-user-alt"></i> <span>Account</span>
+                </a>
+                <a id="subscription-button" class="sidebar-button" onclick="handleSubscriptionClick()">
+                    <i id="subscription-icon" class="fas fa-crown"></i> <span>Subscription</span>
+                </a>
+                <a id="logout-button" class="sidebar-button" onclick="handleLogoutClick()">
+                    <i class="fad fa-sign-out-alt"></i> <span>Logout</span>
+                </a>
+            </div>
+            <div class="sidebar-bottom">
+                <a id="system-info-button" class="sidebar-button" onclick="handleSystemInfoClick()">
+                    <i class="fad fa-info"></i><span>App & Dev. Info</span>
+                </a>
+                <a id="settings-button" class="sidebar-button" onclick="handleSettingsClick()">
+                    <i class="fad fa-cog"></i> <span>Settings</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+        <div class="chat-container" id="chat-area">
+            <div id="empty-chat-placeholder" class="empty-chat">
+                <div class="mb-8 relative">
+                    <div class="absolute -top-16 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full opacity-20 blur-2xl"></div>
+                    <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 w-24 h-24 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full opacity-30 blur-xl animate-pulse"></div>
+                    <i class="fas fa-brain text-6xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-400 mb-4"></i>
+                    <h2 id="empty-chat-title" class="text-4xl font-bold mb-2">Welcome</h2>
+                    <p class="text-gray-400 text-lg max-w-lg mx-auto">Ask me anything or try one of these suggestions</p>
+                </div>
+                <div class="suggestion-grid">
+                    <!-- Suggestions will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <div class="input-wrapper">
+                <div class="input-row">
+                    <div class="relative">
+                        <button id="attachment-button" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <div id="attachment-dropdown" class="attachment-dropdown">
+                            <div class="attachment-option hover:bg-indigo-900/30" data-type="document">
+                                <i class="fas fa-file-alt text-blue-400"></i>
+                                <span>Documents</span>
+                            </div>
+                            <div class="attachment-option hover:bg-indigo-900/30" data-type="image">
+                                <i class="fas fa-image text-green-400"></i>
+                                <span>Images</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <textarea 
+                        id="message-input" 
+                        class="flex-1 bg-gray-700/80 border border-gray-600 rounded-xl py-3 px-4 
+                            text-gray-100 placeholder-gray-400 
+                            focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent
+                            transition-all shadow-inner resize-none"
+                        placeholder="Type your message..."
+                        rows="1"
+                        maxlength="50000"></textarea>
+
+                    <button 
+                        id="send-button" 
+                        class="w-12 h-12 flex items-center justify-center rounded-full 
+                            bg-gradient-to-r from-indigo-600 to-purple-500 
+                            text-white shadow-lg hover:from-indigo-500 hover:to-purple-400
+                            focus:outline-none focus:ring-2 focus:ring-indigo-500 
+                            transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="fad fa-paper-plane"></i>
+                    </button>
+
+                    <button 
+                        id="voice-button" 
+                        class="w-12 h-12 flex items-center justify-center rounded-full 
+                            bg-gradient-to-r from-indigo-600 to-purple-500 
+                            text-white shadow-lg hover:from-indigo-500 hover:to-purple-400
+                            focus:outline-none focus:ring-2 focus:ring-indigo-500 
+                            transition-all transform hover:scale-105 active:scale-95">
+                            <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="./assets/marked.min.js"></script>
+    <script src="./script.js?cachebust=<?= Math.random() ?>"></script>
+
+
+    <script>
+        function updateAppBrand() {
+            const appLogo = document.getElementById('app-logo');
+            const appName = document.getElementById('app-name');
+            
+            if (window.APP_CONFIG && window.APP_CONFIG.app_logo) {
+                // Custom logo exists, update the logo and hide the name
+                appLogo.innerHTML = `<img src="${window.APP_CONFIG.app_logo}" alt="App Logo" style="width: 100%; height: 100%; object-fit: contain; object-position: left;" />`;
+                appName.style.display = 'none';
+                appLogo.style.width = '180px';
+                appLogo.style.height = '32px';
+                appLogo.style.borderRadius = '4px';
+            } else {
+                // Use default logo and show name
+                appLogo.innerHTML = `<img src="./assets/logo.png" alt="App Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;" />`;
+                appName.style.display = 'block';
+                appLogo.style.width = '32px';
+                appLogo.style.height = '32px';
+                appLogo.style.padding = '0';
+                appLogo.style.borderRadius = '8px';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAppBrand();
+        });
+
+        if (typeof initializeApp === 'function') {
+            const originalInitializeApp = initializeApp;
+            initializeApp = function(config) {
+                originalInitializeApp(config);
+                updateAppBrand();
+            };
+        }
+    </script>
+
+    <script>
+        // Toggle sidebar
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        });
+    </script>
+
+    <!-- Language Change Confirmation Popup -->
+    <div id="lang-confirm-popup" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:2000; background:rgba(0,0,0,0.55); backdrop-filter:blur(6px); align-items:center; justify-content:center;">
+        <div style="background:rgba(20,16,40,0.98); border-radius:18px; padding:2rem 2.5rem; min-width:320px; max-width:90vw; color:#fff; box-shadow:0 8px 32px rgba(0,0,0,0.25); display:flex; flex-direction:column; align-items:center;">
+            <div style="font-size:1.2rem;font-weight:600;margin-bottom:1.2rem;text-align:center;">Change Voice Recognition Language?</div>
+            <div id="lang-confirm-message" style="font-size:1.05rem;line-height:1.6;text-align:center;margin-bottom:2rem;">Are you sure you want to change the voice recognition language? This will affect voice input immediately.</div>
+            <div style="display:flex;gap:1.5rem;justify-content:center;">
+                <button id="lang-confirm-cancel" style="background:rgba(255,255,255,0.1);color:var(--text-light);border:1px solid rgba(255,255,255,0.2);padding:0.7rem 1.5rem;border-radius:8px;font-weight:500;cursor:pointer;">Cancel</button>
+                <button id="lang-confirm-continue" style="background:#6366f1;color:white;border:none;padding:0.7rem 1.5rem;border-radius:8px;font-weight:500;cursor:pointer;">Continue</button>
+            </div>
+        </div>
+    </div>
+    <div class="setup-overlay" id="setupOverlay">
+        <div class="setup-container">
+            <div class="progress-indicator" id="progressIndicator">Step 1 of 7</div>
+            
+            <!-- Step 1: Welcome -->
+            <div class="setup-step active text-center" id="step1">
+                <img src="./assets/logo.png" alt="Logo" class="mx-auto w-40 h-40 mb-8 drop-shadow-2xl animate-fade-in" style="animation: fadeIn 1.2s;" />
+                <h1>Welcome to Emily x64</h1>
+                <p>Thank you for choosing us! We're excited to help you get started with Emily x64. This setup wizard will guide you through the initial configuration to ensure the best experience.</p>
+                <button class="btn" onclick="nextStep()">Continue</button>
+            </div>
+            
+
+            <!-- Step 2: Agreement -->
+            <div class="setup-step" id="step2">
+                <h2>Terms and Conditions</h2>
+                <div class="agreement-box" id="agreementBox">
+                    <p>Loading terms and conditions...</p>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="agreementCheck">
+                    <label for="agreementCheck">I agree to the Terms and Conditions</label>
+                </div>
+                <div class="button-container">
+                    <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button class="btn" id="continueBtn2" onclick="nextStep()" disabled>Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Settings -->
+            <div class="setup-step" id="step3">
+                <h2>Configuration Settings</h2>
+                <div class="settings-grid">
+                    <div class="form-group">
+                        <label for="languageSelectsetup">Voice Recognition Language</label>
+                        <select id="languageSelectsetup">
+                            <option value="en-IN">English (India)</option>
+                            <option value="en-US">English (US)</option>
+                            <option value="en-GB">English (UK)</option>
+                            <option value="hi-IN">Hindi</option>
+                            <option value="es-ES">Spanish</option>
+                            <option value="fr-FR">French</option>
+                            <option value="de-DE">German</option>
+                            <option value="it-IT">Italian</option>
+                            <option value="ja-JP">Japanese</option>
+                            <option value="ko-KR">Korean</option>
+                            <option value="zh-CN">Chinese (Simplified)</option>
+                            <option value="ru-RU">Russian</option>
+                            <option value="pt-BR">Portuguese (Brazil)</option>
+                            <option value="nl-NL">Dutch</option>
+                            <option value="tr-TR">Turkish</option>
+                            <option value="pl-PL">Polish</option>
+                            <option value="ar-SA">Arabic</option>
+                            <option value="he-IL">Hebrew</option>
+                            <option value="id-ID">Indonesian</option>
+                            <option value="th-TH">Thai</option>
+                            <option value="vi-VN">Vietnamese</option>
+                            <option value="sv-SE">Swedish</option>
+                            <option value="da-DK">Danish</option>
+                            <option value="fi-FI">Finnish</option>
+                            <option value="el-GR">Greek</option>
+                            <option value="cs-CZ">Czech</option>
+                            <option value="hu-HU">Hungarian</option>
+                            <option value="ro-RO">Romanian</option>
+                            <option value="sk-SK">Slovak</option>
+                            <option value="uk-UA">Ukrainian</option>
+                            <option value="hr-HR">Croatian</option>
+                            <option value="bg-BG">Bulgarian</option>
+                            <option value="sr-RS">Serbian</option>
+                            <option value="sl-SI">Slovenian</option>
+                            <option value="et-EE">Estonian</option>
+                            <option value="lv-LV">Latvian</option>
+                            <option value="lt-LT">Lithuanian</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Enable AI Speech</label>
+                        <div class="toggle-container">
+                            <div class="toggle" id="aiSpeechToggle" onclick="toggleAISpeech()">
+                                <div class="toggle-slider"></div>
+                            </div>
+                            <span class="toggle-label" id="aiSpeechLabel">Disabled</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button class="btn" onclick="nextStep()">Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Home Assistant Setup -->
+            <div class="setup-step" id="step4">
+                <h2>Home Assistant Integration</h2>
+                <p>Connect Emily x64 to your Home Assistant instance for smart home control. This step is optional and can be configured later.</p>
+                
+                <div class="settings-grid">
+                    <div class="form-group">
+                        <label for="haUrlSetup">Home Assistant URL</label>
+                        <input type="url" id="haUrlSetup" placeholder="http://192.168.1.100:8123" style="background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; padding: 0.75rem; font-size: 1rem;">
+                    </div>
+                    <div class="form-group">
+                        <label for="haTokenSetup">Long-Lived Access Token</label>
+                        <input type="password" id="haTokenSetup" placeholder="Enter your access token" style="background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; padding: 0.75rem; font-size: 1rem;">
+                    </div>
+                </div>
+
+                <div id="haTestStatus" style="display: none; margin: 20px 0; padding: 12px; border-radius: 8px; text-align: center;">
+                    <p id="haTestMessage" style="margin: 0; font-weight: 600;"></p>
+                </div>
+
+                <div class="button-container">
+                    <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button class="btn" onclick="skipHomeAssistant()" id="haSkipBtn">Skip</button>
+                    <button class="btn" onclick="testHomeAssistantSetup()" id="haTestBtn"><span id="haTestBtnText">Test & Continue</span><span id="haTestBtnLoader" style="display:none;margin-left:8px;"><i class='fas fa-spinner fa-spin'></i></span></button>
+                </div>
+            </div>
+
+            <!-- Step 5: Important Notice (moved here) -->
+            <div class="setup-step" id="step5">
+                <h2>Important Notice</h2>
+                <div style="background: rgba(255, 193, 7, 0.12); border: 1px solid rgba(255, 193, 7, 0.3); border-radius: 12px; padding: 24px; margin: 20px 0;">
+                    <div style="font-size: 2.5rem; margin-bottom: 12px;">⚠️</div>
+                    <p style="color: #ffc107; font-size: 1.2rem; font-weight: 700; margin-bottom: 12px;">Notice</p>
+                    <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.6; font-size: 1rem; margin-bottom: 0;">
+                        Emily x64 uses advanced AI for personalized voice interactions and intelligent responses. It learns from your usage to improve over time, with privacy protected through local processing and encrypted data. For best performance, enable microphone access and meet system requirements. Note: Some features are currently disabled as they are still under development.
+                    </p>
+                </div>
+                <div class="button-container">
+                    <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button class="btn" onclick="nextStep()">Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 6: Final -->
+            <div class="setup-step" id="step6">
+                <h2>Setup Complete!</h2>
+                <p>All configurations have been saved successfully. Emily x64 is now ready to use with your personalized settings.</p>
+                <p>You can enable app opening (windows intigration) in the Emily settings.</p>
+                <div style="background: rgba(0, 0, 0, 0.3); border-radius: 12px; padding: 20px; margin: 20px 0;">
+                    <p style="color: rgba(255, 255, 255, 0.95); margin-bottom: 8px; font-size: 1.1rem; font-weight: 600;">Your Settings:</p>
+                    <p style="color: rgba(255, 255, 255, 0.75); font-size: 0.95rem; margin-bottom: 0;" id="settingsSummary"></p>
+                </div>
+                <div class="button-container">
+                    <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button class="btn" onclick="finishSetup()">Save and Restart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loader"></div>
+        <div class="loading-text">Setting up Emily x64...<br>Please wait while we configure your settings.</div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let aiSpeechEnabled = false;
+        let agreementAccepted = false;
+        let homeAssistantEnabled = false;
+        let homeAssistantTested = false;
+        let haTestInProgress = false;
+        let isTransitioning = false; // Prevent multiple transitions
+
+        // Function to show setup window
+        function startFirstSetup() {
+            document.getElementById('setupOverlay').classList.add('active');
+            loadAgreement();
+        }
+
+        // Function to load agreement from URL
+        async function loadAgreement() {
+            try {
+                // Replace with your actual terms URL
+                const response = await fetch('https://dkydivyansh.com/Project/api/emilyx64/terms.txt');
+                const text = await response.text();
+                document.getElementById('agreementBox').innerHTML = `<p>${text.replace(/\n/g, '</p><p>')}</p>`;
+            } catch (error) {
+                // Fallback content if URL fails
+                document.getElementById('agreementBox').innerHTML = `
+                    <h3>Terms and Conditions</h3>
+                    <p><strong>1. Acceptance of Terms</strong></p>
+                    <p>By using Emily x64, you agree to be bound by these terms and conditions.</p>
+                    <p><strong>2. Privacy Policy</strong></p>
+                    <p>We respect your privacy and are committed to protecting your personal data.</p>
+                    <p><strong>3. Software License</strong></p>
+                    <p>This software is licensed for personal and commercial use under the specified conditions.</p>
+                    <p><strong>4. Voice Recognition</strong></p>
+                    <p>Voice data is processed locally and not transmitted to external servers without consent.</p>
+                    <p><strong>5. AI Features</strong></p>
+                    <p>AI speech features may require internet connectivity for optimal performance.</p>
+                    <p><strong>6. Updates</strong></p>
+                    <p>Software updates will be provided to enhance functionality and security.</p>
+                    <p><strong>7. Support</strong></p>
+                    <p>Technical support is available through our official channels.</p>
+                `;
+            }
+        }
+
+        // Handle agreement checkbox
+        document.getElementById('agreementCheck').addEventListener('change', function() {
+            agreementAccepted = this.checked;
+            document.getElementById('continueBtn2').disabled = !agreementAccepted;
+        });
+
+        // Function to go to next step
+        function nextStep() {
+            if (isTransitioning || (currentStep === 2 && !agreementAccepted)) {
+                return;
+            }
+            
+            isTransitioning = true;
+            const setupContainer = document.querySelector('.setup-container');
+            setupContainer.classList.add('transitioning');
+            
+            const currentStepElement = document.getElementById(`step${currentStep}`);
+            currentStepElement.classList.add('slide-out-left');
+            
+            setTimeout(() => {
+                currentStepElement.classList.remove('active', 'slide-out-left');
+                currentStep++;
+                const nextStepElement = document.getElementById(`step${currentStep}`);
+                nextStepElement.classList.add('active');
+                
+                document.getElementById('progressIndicator').textContent = `Step ${currentStep} of 7`;
+                
+                if (currentStep === 6) {
+                    updateSettingsSummary();
+                }
+                
+                // Re-enable buttons after animation
+                setTimeout(() => {
+                    setupContainer.classList.remove('transitioning');
+                    isTransitioning = false;
+                }, 50);
+            }, 200);
+        }
+
+        // Function to go to previous step
+        function prevStep() {
+            if (isTransitioning || currentStep <= 1) {
+                return;
+            }
+            
+            isTransitioning = true;
+            const setupContainer = document.querySelector('.setup-container');
+            setupContainer.classList.add('transitioning');
+            
+            const currentStepElement = document.getElementById(`step${currentStep}`);
+            currentStepElement.classList.add('slide-out-right');
+            
+            setTimeout(() => {
+                currentStepElement.classList.remove('active', 'slide-out-right');
+                currentStep--;
+                const prevStepElement = document.getElementById(`step${currentStep}`);
+                prevStepElement.classList.add('active', 'slide-in-left');
+                
+                document.getElementById('progressIndicator').textContent = `Step ${currentStep} of 7`;
+                
+                // Reset Home Assistant test status when going back to step 4
+                if (currentStep === 4) {
+                    homeAssistantTested = false;
+                    document.getElementById('haTestStatus').style.display = 'none';
+                    haTestInProgress = false;
+                    const haTestBtn = document.getElementById('haTestBtn');
+                    if (haTestBtn) {
+                        haTestBtn.disabled = false;
+                        document.getElementById('haTestBtnLoader').style.display = 'none';
+                        document.getElementById('haTestBtnText').style.display = '';
+                    }
+                }
+                
+                // Remove slide-in-left class and re-enable buttons after animation
+                setTimeout(() => {
+                    prevStepElement.classList.remove('slide-in-left');
+                    setupContainer.classList.remove('transitioning');
+                    isTransitioning = false;
+                }, 200);
+            }, 200);
+        }
+
+        // Function to toggle AI speech
+        function toggleAISpeech() {
+            aiSpeechEnabled = !aiSpeechEnabled;
+            const toggle = document.getElementById('aiSpeechToggle');
+            const label = document.getElementById('aiSpeechLabel');
+            
+            if (aiSpeechEnabled) {
+                toggle.classList.add('active');
+                label.textContent = 'Enabled';
+            } else {
+                toggle.classList.remove('active');
+                label.textContent = 'Disabled';
+            }
+        }
+
+        // Function to update settings summary
+        function updateSettingsSummary() {
+            const language = document.getElementById('languageSelectsetup');
+            const languageText = language.options[language.selectedIndex].text;
+            const aiSpeechText = aiSpeechEnabled ? 'Enabled' : 'Disabled';
+            const haText = homeAssistantEnabled ? 'Enabled' : 'Disabled';
+            
+            document.getElementById('settingsSummary').innerHTML = `
+                Voice Recognition Language: ${languageText}<br>
+                AI Speech: ${aiSpeechText}<br>
+                Home Assistant: ${haText}
+            `;
+        }
+
+        // Function to skip Home Assistant setup
+        function skipHomeAssistant() {
+            if (isTransitioning) return;
+            homeAssistantEnabled = false;
+            homeAssistantTested = true;
+            nextStep();
+        }
+
+        // Function to test Home Assistant connection and continue
+        async function testHomeAssistantSetup() {
+            if (haTestInProgress || isTransitioning) return;
+            
+            const haTestBtn = document.getElementById('haTestBtn');
+            const haTestBtnText = document.getElementById('haTestBtnText');
+            const haTestBtnLoader = document.getElementById('haTestBtnLoader');
+            
+            haTestInProgress = true;
+            if (haTestBtn) {
+                haTestBtn.disabled = true;
+                haTestBtnText.style.display = 'none';
+                haTestBtnLoader.style.display = '';
+            }
+            
+            const url = document.getElementById('haUrlSetup').value.trim();
+            const token = document.getElementById('haTokenSetup').value.trim();
+            
+            if (!url || !token) {
+                showHaTestStatus('Please enter both URL and token', 'error');
+                haTestInProgress = false;
+                if (haTestBtn) {
+                    haTestBtn.disabled = false;
+                    haTestBtnText.style.display = '';
+                    haTestBtnLoader.style.display = 'none';
+                }
+                return;
+            }
+            
+            showHaTestStatus('Testing connection...', 'testing');
+            
+            try {
+                const isUp = await isHomeAssistantUp(url, token);
+                
+                if (isUp) {
+                    showHaTestStatus('Connection successful!', 'success');
+                    homeAssistantEnabled = true;
+                    homeAssistantTested = true;
+                    
+                    // Wait a bit for user to see success message, then continue
+                    setTimeout(() => {
+                        haTestInProgress = false;
+                        if (haTestBtn) {
+                            haTestBtn.disabled = false;
+                            haTestBtnText.style.display = '';
+                            haTestBtnLoader.style.display = 'none';
+                        }
+                        nextStep();
+                    }, 600);
+                } else {
+                    showHaTestStatus('Connection failed. Please check your URL and token.', 'error');
+                    homeAssistantTested = false;
+                    haTestInProgress = false;
+                    if (haTestBtn) {
+                        haTestBtn.disabled = false;
+                        haTestBtnText.style.display = '';
+                        haTestBtnLoader.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Home Assistant test error:', error);
+                showHaTestStatus('Connection failed. Please check your URL and token.', 'error');
+                homeAssistantTested = false;
+                haTestInProgress = false;
+                if (haTestBtn) {
+                    haTestBtn.disabled = false;
+                    haTestBtnText.style.display = '';
+                    haTestBtnLoader.style.display = 'none';
+                }
+            }
+        }
+
+        // Function to show Home Assistant test status
+        function showHaTestStatus(message, type) {
+            const statusDiv = document.getElementById('haTestStatus');
+            const messageP = document.getElementById('haTestMessage');
+            
+            statusDiv.style.display = 'block';
+            messageP.textContent = message;
+            
+            // Set background color based on type
+            switch (type) {
+                case 'success':
+                    statusDiv.style.background = 'rgba(34, 197, 94, 0.2)';
+                    statusDiv.style.border = '1px solid rgba(34, 197, 94, 0.3)';
+                    messageP.style.color = '#22c55e';
+                    break;
+                case 'error':
+                    statusDiv.style.background = 'rgba(239, 68, 68, 0.2)';
+                    statusDiv.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+                    messageP.style.color = '#ef4444';
+                    break;
+                case 'testing':
+                    statusDiv.style.background = 'rgba(59, 130, 246, 0.2)';
+                    statusDiv.style.border = '1px solid rgba(59, 130, 246, 0.3)';
+                    messageP.style.color = '#3b82f6';
+                    break;
+            }
+        }
+
+        // Function to finish setup
+        function finishSetup() {
+            if (isTransitioning) return;
+            
+            const language = document.getElementById('languageSelectsetup').value;
+            const haUrl = document.getElementById('haUrlSetup').value.trim();
+            const haToken = document.getElementById('haTokenSetup').value.trim();
+            
+            const settings = {
+                voiceLanguage: language,
+                aiSpeechEnabled: aiSpeechEnabled,
+                homeAssistantEnabled: homeAssistantEnabled,
+                homeAssistantUrl: haUrl,
+                homeAssistantToken: haToken
+            };
+            
+            // Show loading screen
+            document.getElementById('loadingScreen').classList.add('active');
+            
+            // Call backend to save settings
+            if (window.pywebview && window.pywebview.api && typeof window.pywebview.api.finishsetup === 'function') {
+                window.pywebview.api.finishsetup(settings)
+                    .then(result => {
+                        console.log('Setup completed:', result);
+                    })
+                    .catch(error => {
+                        console.error('Setup error:', error);
+                        document.getElementById('loadingScreen').classList.remove('active');
+                    });
+            } else {
+                console.error('Backend not available');
+                document.getElementById('loadingScreen').classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
+ 

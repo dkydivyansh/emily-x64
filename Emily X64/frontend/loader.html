@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <link rel="icon" type="image/png" href="./assets/logo.png">
+    <link rel="stylesheet" href="./assets/tailwindcss.css">
+    <link rel="stylesheet" href="./assets/fa-pro/css/all.min.css">
+    <style>
+        /* Background effects from login.html */
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(-45deg, #0d0221, #140d30, #1d0c53, #2a1163);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.6; filter: blur(30px); }
+            50% { opacity: 0.9; filter: blur(35px); }
+            100% { opacity: 0.6; filter: blur(30px); }
+        }
+
+        /* Grid pattern as background */
+        .background-grid {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(131, 96, 255, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(131, 96, 255, 0.08) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.3;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .background-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: pulseGlow 8s infinite ease-in-out;
+            z-index: 0;
+        }
+
+        .bg-glow-1 {
+            top: 20%;
+            left: 15%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(131, 96, 255, 0.4) 0%, rgba(131, 96, 255, 0) 70%);
+        }
+
+        .bg-glow-2 {
+            bottom: 10%;
+            right: 10%;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(211, 87, 249, 0.3) 0%, rgba(211, 87, 249, 0) 70%);
+        }
+
+        /* Main container */
+        .loader-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Left side - Logo and status */
+        .loader-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .loader-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 2rem;
+            animation: fadeIn 1.2s;
+        }
+
+        .loader-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .loader-subtitle {
+            color: #a5b4fc;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .version-info {
+            color: #818cf8;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+
+        .spinner {
+            margin-right: 8px;
+            animation: spin 1s linear infinite;
+            color: #c4b5fd;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .status-text {
+            font-family: monospace;
+            color: #c4b5fd;
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .subtitle-separator {
+            color: #818cf8;
+            margin: 0 0.5rem;
+            opacity: 0.5;
+        }
+
+        .status-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Right side - Log window */
+        .loader-right {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .log-header {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .log-container {
+            flex: 1;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+        }
+
+        .log-entry {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            margin-bottom: 0.25rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .log-timestamp {
+            color: #94a3b8;
+            flex-shrink: 0;
+        }
+
+        .log-text {
+            flex: 1;
+        }
+
+        .log-info {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .log-warning {
+            background: rgba(234, 179, 8, 0.1);
+            color: #fbbf24;
+        }
+
+        .log-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+        }
+
+        .log-success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #4ade80;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background effects -->
+    <div class="background-grid"></div>
+    <div class="background-glow bg-glow-1"></div>
+    <div class="background-glow bg-glow-2"></div>
+
+    <div class="loader-container">
+        <!-- Left side - Logo and status -->
+        <div class="loader-left">
+            <img src="./assets/logo.png" alt="Logo" class="loader-logo">
+            <h1 class="loader-title">EMILY X64</h1>
+            <p class="loader-subtitle">dkydivyansh.com<span class="subtitle-separator">|</span><span id="version-info" class="version-info">v1.0.0</span></p>
+            <div id="status-text" class="status-text">
+                <i class="fad fa-star-christmas spinner"></i>
+    
+
+                <span>Initializing...</span>
+            </div>
+        </div>
+
+        <!-- Right side - Log window -->
+        <div class="loader-right">
+            <div class="log-header">System Log</div>
+            <div id="log-container" class="log-container">
+                <!-- Log entries will be added here dynamically -->
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

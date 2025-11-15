@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign in to Dkydivyansh.com</title>
+  <link rel="stylesheet" href="./assets/tailwindcss.css">
+  
+  <style>
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .alert-danger {
+      background-color: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+    }
+
+    .alert-success {
+      background-color: #e6fffa;
+      color: #047857;
+      border: 1px solid #a7f3d0;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+      backdrop-filter: blur(4px);
+    }
+
+    .alert-warning {
+      background-color: #fef3cd;
+      color: #d97706;
+      border: 1px solid #fde68a;
+    }
+
+    .alert i {
+      font-size: 16px;
+    }
+
+    @keyframes buttonShine {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(100%); }
+    }
+    
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes pulseGlow {
+      0% { opacity: 0.6; filter: blur(30px); }
+      50% { opacity: 0.9; filter: blur(35px); }
+      100% { opacity: 0.6; filter: blur(30px); }
+    }
+    
+    @keyframes floatingAnim {
+      0% { transform: translate(0, 0); }
+      33% { transform: translate(5px, -5px); }
+      66% { transform: translate(-5px, 5px); }
+      100% { transform: translate(0, 0); }
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(-45deg, #0d0221, #140d30, #1d0c53, #2a1163);
+      background-size: 400% 400%;
+      animation: gradientFlow 15s ease infinite;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Glass effect applied to body */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.05) 40%,
+        rgba(255, 255, 255, 0) 80%
+      );
+      backdrop-filter: blur(8px);
+      z-index: 1;
+      pointer-events: none;
+    }
+    
+    /* Card glow as background overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 20%;
+      right: 20%;
+      width: 60%;
+      height: 60%;
+      background: radial-gradient(ellipse at center, rgba(131, 96, 255, 0.3) 0%, rgba(76, 38, 200, 0.2) 40%, rgba(60, 20, 150, 0) 80%);
+      filter: blur(40px);
+      z-index: 1;
+      pointer-events: none;
+      animation: pulseGlow 8s infinite ease-in-out;
+    }
+    
+    /* Grid pattern as background */
+    .background-grid {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(131, 96, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(131, 96, 255, 0.08) 1px, transparent 1px);
+      background-size: 20px 20px;
+      opacity: 0.3;
+      z-index: 1;
+      pointer-events: none;
+    }
+    
+    .background-glow {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(40px);
+      animation: pulseGlow 8s infinite ease-in-out;
+      z-index: 0;
+    }
+    
+    .bg-glow-1 {
+      top: 20%;
+      left: 15%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(131, 96, 255, 0.4) 0%, rgba(131, 96, 255, 0) 70%);
+      animation: pulseGlow 8s infinite ease-in-out, floatingAnim 20s infinite ease-in-out;
+    }
+    
+    .bg-glow-2 {
+      bottom: 10%;
+      right: 10%;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(211, 87, 249, 0.3) 0%, rgba(211, 87, 249, 0) 70%);
+      animation: pulseGlow 12s infinite ease-in-out, floatingAnim 16s infinite ease-in-out alternate;
+    }
+    
+    .bg-glow-3 {
+      top: 60%;
+      left: 25%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(91, 186, 255, 0.3) 0%, rgba(91, 186, 255, 0) 70%);
+      animation: pulseGlow 10s infinite ease-in-out, floatingAnim 25s infinite ease-in-out alternate-reverse;
+    }
+    
+    /* Login form container - no card styling */
+    .login-form-container {
+      position: relative;
+      z-index: 10;
+      background: transparent;
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+    }
+    
+    .login-button {
+      position: relative;
+      overflow: hidden;
+      border-radius: 50px;
+      background: linear-gradient(90deg, #e4e4e4 0%, #e4e4e4 60%, #ffc187 100%);
+      color: #000;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .login-button::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 35%;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 193, 135, 0.5) 100%);
+      z-index: 1;
+    }
+    
+    .login-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(255, 193, 135, 0.7);
+    }
+    
+    .login-button:hover::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: buttonShine 1.5s infinite;
+      z-index: 2;
+    }
+    
+    .cursor-pointer {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 3;
+    }
+    
+    .input-field {
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .input-field:focus {
+      border-color: rgba(131, 96, 255, 0.6);
+      box-shadow: 0 0 15px rgba(131, 96, 255, 0.3);
+      background-color: rgba(0, 0, 0, 0.4);
+      outline: none;
+    }
+    
+    .input-field:hover {
+      background-color: rgba(0, 0, 0, 0.4);
+      border-color: rgba(131, 96, 255, 0.3);
+    }
+
+    .secondary-button {
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .secondary-button:hover {
+      border-color: rgba(131, 96, 255, 0.6);
+      box-shadow: 0 0 15px rgba(131, 96, 255, 0.5);
+      transform: translateY(-1px);
+    }
+    
+    .secondary-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(131, 96, 255, 0.2), transparent);
+      transition: all 0.4s ease;
+      z-index: -1;
+    }
+    
+    .secondary-button:hover::before {
+      left: 100%;
+      transition: all 0.4s ease;
+    }
+
+    .error-message {
+      color: #ef4444;
+      font-size: 12px;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(20, 20, 40, 0.5);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.2s;
+    }
+    .spinner {
+      border: 6px solid #eee;
+      border-top: 6px solid #6366f1;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background effects -->
+  <div class="background-grid"></div>
+  <div class="background-glow bg-glow-1"></div>
+  <div class="background-glow bg-glow-2"></div>
+  <div class="background-glow bg-glow-3"></div>
+
+  <div id="loadingOverlay" class="loading-overlay" style="display:none;">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="min-h-screen flex items-center justify-center px-4 relative">
+    <div class="w-full max-w-sm login-form-container">
+        <div class="text-3xl font-bold text-white mb-2">✲</div>
+        <h1 class="text-2xl font-bold text-white mb-8">Sign in to dkydivyansh.com</h1>
+
+        <!-- Error Display Area -->
+        <div id="errorContainer" class="hidden"></div>
+
+        <form id="loginForm">
+          <div class="mb-5">
+            <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+            <input 
+              type="email" 
+              name="email"
+              id="email"
+              class="w-full px-4 py-3 bg-black bg-opacity-30 rounded-lg text-white placeholder-gray-500 input-field"
+              placeholder="name@work-email.com"
+              required
+              autofocus
+            />
+            <div id="emailError" class="error-message hidden"></div>
+          </div>
+          
+          <div class="mb-6">
+            <label for="password" class="block text-sm font-medium text-gray-300 mb-1">Password</label>
+            <input 
+              type="password"
+              name="password"
+              id="password"
+              class="w-full px-4 py-3 bg-black bg-opacity-30 rounded-lg text-white placeholder-gray-500 input-field"
+              placeholder="Enter your password"
+              required
+            />
+            <div id="passwordError" class="error-message hidden"></div>
+          </div>
+
+          <div class="relative mb-6">
+            <button type="submit" class="w-full py-3 login-button">
+              LOG IN
+            </button>
+            <div class="cursor-pointer">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3.5 8H12.5M12.5 8L8.5 4M12.5 8L8.5 12" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="flex items-center my-6">
+            <div class="flex-grow h-px bg-gray-700"></div>
+            <span class="px-4 text-sm text-gray-400">OR</span>
+            <div class="flex-grow h-px bg-gray-700"></div>
+          </div>
+
+          <button type="button" 
+                  id="createAccountBtn" 
+                  class="w-full py-2.5 px-4 border border-gray-700 rounded-lg text-gray-200 bg-black bg-opacity-30 transition duration-300 text-sm font-medium flex items-center justify-center secondary-button">
+            Create Account
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Error display functionality
+    function showError(message, type = 'danger') {
+      const errorContainer = document.getElementById('errorContainer');
+      const iconClass = type === 'success' ? 'check-circle' : 
+                       type === 'warning' ? 'exclamation-triangle' : 
+                       'exclamation-circle';
+      
+      const iconSymbol = type === 'success' ? '✓' : 
+                        type === 'warning' ? '⚠' : 
+                        '✕';
+      
+      errorContainer.innerHTML = `
+        <div class="alert alert-${type}">
+          <span>${iconSymbol}</span> ${message}
+        </div>
+      `;
+      errorContainer.classList.remove('hidden');
+    }
+
+    function hideError() {
+      const errorContainer = document.getElementById('errorContainer');
+      errorContainer.classList.add('hidden');
+      errorContainer.innerHTML = '';
+    }
+
+    function showFieldError(fieldId, message) {
+      const errorElement = document.getElementById(fieldId + 'Error');
+      if (errorElement) {
+        errorElement.innerHTML = `<span>⚠</span> ${message}`;
+        errorElement.classList.remove('hidden');
+      }
+    }
+
+    function hideFieldError(fieldId) {
+      const errorElement = document.getElementById(fieldId + 'Error');
+      if (errorElement) {
+        errorElement.classList.add('hidden');
+        errorElement.innerHTML = '';
+      }
+    }
+
+    function hideAllFieldErrors() {
+      hideFieldError('email');
+      hideFieldError('password');
+    }
+
+    // Form submission handler
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      hideError();
+      hideAllFieldErrors();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      let hasErrors = false;
+      if (!email) {
+        showFieldError('email', 'Email is required');
+        hasErrors = true;
+      } else if (!email.includes('@')) {
+        showFieldError('email', 'Please enter a valid email address');
+        hasErrors = true;
+      }
+      if (!password) {
+        showFieldError('password', 'Password is required');
+        hasErrors = true;
+      } else if (password.length < 6) {
+        showFieldError('password', 'Password must be at least 6 characters');
+        hasErrors = true;
+      }
+      if (hasErrors) {
+        showError('Please fix the errors below and try again.');
+        return;
+      }
+      showLoading();
+      // Call Python API
+      if (window.pywebview && window.pywebview.api && typeof window.pywebview.api.submit_login === 'function') {
+        try {
+          const result = await window.pywebview.api.submit_login(email, password);
+          hideLoading();
+          if (result && result.success) {
+            showError('Login successful! Closing...', 'success');
+            setTimeout(() => {
+              if (window.pywebview.api.close_window) window.pywebview.api.close_window();
+            }, 1000);
+          } else {
+            showError(result && result.message ? result.message : 'Login failed.');
+          }
+        } catch (err) {
+          hideLoading();
+          showError('Login error: ' + err);
+        }
+      } else {
+        hideLoading();
+        showError('PyWebView API not available.');
+      }
+    });
+
+    // Clear errors when user starts typing
+    document.getElementById('email').addEventListener('input', function() {
+      hideFieldError('email');
+      if (document.getElementById('errorContainer').innerHTML.includes('Please fix the errors')) {
+        hideError();
+      }
+    });
+
+    document.getElementById('password').addEventListener('input', function() {
+      hideFieldError('password');
+      if (document.getElementById('errorContainer').innerHTML.includes('Please fix the errors')) {
+        hideError();
+      }
+    });
+
+    // Demo function to test error display (you can remove this)
+    function testErrors() {
+      // Test different error types
+      setTimeout(() => showError('This is a danger alert'), 1000);
+      setTimeout(() => showError('This is a warning alert', 'warning'), 3000);
+      setTimeout(() => showError('This is a success alert', 'success'), 5000);
+    }
+
+    // Create Account button handler
+    document.getElementById('createAccountBtn').addEventListener('click', function() {
+      const registrationUrl = 'https://auth.dkydivyansh.com/auth/register'; // Change to your actual registration URL
+      if (window.pywebview && window.pywebview.api && typeof window.pywebview.api.open_url === 'function') {
+        window.pywebview.api.open_url(registrationUrl).then(() => {
+          showError('Registration page opened in your browser.', 'success');
+        }).catch(() => {
+          showError('Could not open registration page in browser.', 'warning');
+        });
+      } else {
+        window.open(registrationUrl, '_blank');
+        showError('Registration page opened in your browser.', 'success');
+      }
+    });
+
+    function showLoading() {
+      document.getElementById('loadingOverlay').style.display = 'flex';
+    }
+    function hideLoading() {
+      document.getElementById('loadingOverlay').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

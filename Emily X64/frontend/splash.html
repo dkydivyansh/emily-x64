@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booting...</title>
+    <link rel="icon" type="image/png" href="./assets/logo.png">
+    <!-- Tailwind CSS CDN -->
+    <link rel="stylesheet" href="./assets/tailwindcss.css">
+    <style>
+        body {
+            background: url('./assets/splash.png') center center/cover no-repeat;
+            min-height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+        .blend {
+            background: rgba(24, 16, 64, 0.7);
+            backdrop-filter: blur(6px);
+        }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="h-full w-full flex items-center justify-center relative">
+    <div class="absolute inset-0 blend"></div>
+    <div class="relative z-10 flex flex-col items-center justify-center w-full h-full">
+        <!-- Logo -->
+        <img src="./assets/logo.png" alt="Logo" class="w-40 h-40 mb-8 drop-shadow-2xl animate-fade-in" style="animation: fadeIn 1.2s;"/>
+        <!-- App Name -->
+        <h1 class="text-5xl font-extrabold text-white tracking-wide mb-2 drop-shadow-lg" style="font-family: 'Inter', sans-serif;">EMILY X64</h1>
+        <p class="text-lg text-indigo-200 mb-12 tracking-widest">dkydivyansh.com</p>
+        <!-- Status Text -->
+        <div class="absolute bottom-10 w-full flex justify-center">
+            <span id="status-text" class="text-lg text-indigo-100 font-mono animate-pulse">Booting...</span>
+        </div>
+    </div>
+    <script>
+        // Animation for fade-in
+        document.querySelector('img').style.opacity = 0;
+        setTimeout(() => {
+            document.querySelector('img').style.opacity = 1;
+        }, 200);
+
+        // Removed the auto-cycling status text - now controlled only by Python
+    </script>
+</body>
+</html>
