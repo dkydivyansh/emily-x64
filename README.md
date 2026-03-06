@@ -56,10 +56,6 @@ Emily X64 is designed with extensibility in mind, supporting the development of 
 
 ## Download
 
-The latest release is available at the following link:
-
-**[Download Emily X64](https://dkydivyansh.com/emily-ai/#emilyai-download)**
-
 For more information and documentation, visit the project page:
 
 **[Project Page](https://dkydivyansh.com/emily-ai)**
