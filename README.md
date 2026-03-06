@@ -12,7 +12,6 @@
 
 **Emily X64** is a feature-rich desktop assistant developed to bridge the gap between natural human interaction and digital automation. It leverages modern language modeling, speech processing, and system-level integration to provide a seamless and intelligent assistant experience across both digital and physical environments.
 
-> **Download:** [Emily X64 Installer](https://dkydivyansh.com/emily-ai/#emilyai-download)  
 > **Project Page:** [https://dkydivyansh.com/emily-ai](https://dkydivyansh.com/emily-ai)
 
 ---
